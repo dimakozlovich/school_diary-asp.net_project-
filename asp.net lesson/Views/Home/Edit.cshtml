@@ -1,0 +1,8 @@
+﻿@model Subject
+<form method="post">
+    <label>Предмет</label>
+    <input type="text" value="@Model.Name_subject_id" name="EditSubject" />
+    <label>Д/З</label>
+    <input type="text" value="@Model.Homework" name="EditHomework" />
+    <input type="submit" value="Сохранить" />
+</form>
