@@ -4,22 +4,66 @@
     ViewData["Title"] = "Home Page";
  }
 
-<div class="text-center">
-   <table>
-     
-     @foreach(var subject in Model.Subjects)
-     {
-         <tr>
-                <td>@Html.DisplayFor(modelItem => subject.Name_subject_id)</td>
-                <td>@subject.Homework</td>
-                <td>
-                    @Html.ActionLink("Редактировать", "Edit", new { date = subject.Date_first_day_of_week,
-                                                                    place_in_week = subject.Place_in_week,
-                                                                    place_in_day = subject.Place_in_day,
-                                                                    grade_id = subject.Grade_id }  );
-                </td>
-        </tr>
-     }
-   
-    </table>
-</div>
+
+<!DOCTYPE html>
+<html>
+    <head>
+      <style type="text/css">
+            TABLE {
+            width: 300px; 
+            border-collapse: collapse;
+           }
+           TD, TH {
+            padding: 3px; 
+            border: 1px solid black;
+           }
+           TH {
+            background: #b0e0e6;
+           }
+      </style>
+    </head>
+    <body>
+    <div class="text-center">
+        @*<table>
+
+            @foreach (var subject in Model.Subjects)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => subject.Name_subject_id)</td>
+                    <td>@subject.Homework</td>
+                    <td>
+                        @Html.ActionLink("Редактировать", "Edit", new { date = subject.Date_first_day_of_week,
+                    place_in_week = subject.Place_in_week,
+                    place_in_day = subject.Place_in_day,
+                    grade_id = subject.Grade_id }  );
+                    </td>
+                </tr>
+            }
+        </table>*@
+            @for(int day = 1 ;day<=6;day++)
+            {
+              <table>
+                @for(int subj = 1;subj<=6;subj++)
+                {
+                    Subject subject = Model.ExistenceCheck(day, subj,Model);
+                    <tr>
+
+                        <td>@Html.DisplayFor(modelItem => subject.Name_subject_id)</td>
+                        <td>@subject.Homework</td>
+                        <td>
+                            @Html.ActionLink("Редактировать", "Edit", new { date = subject.Date_first_day_of_week,
+                    place_in_week = subject.Place_in_week,
+                    place_in_day = subject.Place_in_day,
+                    grade_id = subject.Grade_id }  );
+                        </td>
+                    </tr>
+                }
+              </table>
+            }
+
+        
+    </div>
+    </body>
+</html>
+
+

@@ -10,6 +10,16 @@
         public string Homework { get; set; }
         public int Grade_id { get; set; }
         
+        public Subject()
+        {
+
+        }
+        public Subject(int grade_id,int place_in_week,int place_in_day)
+        {
+            Place_in_week = place_in_week;
+            Place_in_day = place_in_day;
+            Grade_id = grade_id;
+        }
         public Subject(int place_in_week, int place_in_day,DateTime dateTime,int name_subject_id,string homework,int grade_id)
         {
            Place_in_week = place_in_week;

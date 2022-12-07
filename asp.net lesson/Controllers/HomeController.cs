@@ -23,16 +23,22 @@ namespace asp.net_lesson.Controllers
         public IActionResult Edit(DateTime date,int place_in_day,int place_in_week, int grade_id)
         {
             var timeTable = new Timetable(grade_id);
-            return View(timeTable.FindSubject(date,place_in_day,  place_in_week, grade_id));
+            return View(timeTable.FindSubject(place_in_day,  place_in_week, grade_id));
         }
         [HttpPost]
         public IActionResult Edit(DateTime date, int place_in_day, int place_in_week, int grade_id, string EditSubject, string EditHomework)
         {
             var timeTable = new Timetable(grade_id);
-            timeTable.EditSubject(date,place_in_day,place_in_week,grade_id,EditSubject,EditHomework);
+            if (timeTable.BoolExistenceCheck(place_in_week, place_in_day))
+            {
+                timeTable.EditSubject(date, place_in_day, place_in_week, grade_id, EditSubject, EditHomework);
+            }
+            else
+            {
+                timeTable.AddSubject(place_in_day, place_in_week, grade_id, EditSubject, EditHomework);
+            } 
             var newtimeTable = new Timetable(grade_id);
             return View("Index",newtimeTable);
-
         }
 
         public IActionResult Privacy()
