@@ -23,24 +23,21 @@
       </style>
     </head>
     <body>
-    <div class="text-center">
-        @*<table>
 
-            @foreach (var subject in Model.Subjects)
-            {
-                <tr>
-                    <td>@Html.DisplayFor(modelItem => subject.Name_subject_id)</td>
-                    <td>@subject.Homework</td>
-                    <td>
-                        @Html.ActionLink("Редактировать", "Edit", new { date = subject.Date_first_day_of_week,
-                    place_in_week = subject.Place_in_week,
-                    place_in_day = subject.Place_in_day,
-                    grade_id = subject.Grade_id }  );
-                    </td>
-                </tr>
-            }
-        </table>*@
-            @for(int day = 1 ;day<=6;day++)
+    <form method="post" action="~/Home/Week">
+        <select name="week">
+            <option value="Past">Прошлая</option>
+            <option value="Now">Эта</option>
+            <option value="Next">Следующая</option>
+        </select
+         <p>
+        <input type="submit" value="Отправить" />
+         </p>
+    </form>
+        
+    <div class="text-center">
+       
+        @for(int day = 1 ;day<=6;day++)
             {
               <table>
                 @for(int subj = 1;subj<=6;subj++)
@@ -60,8 +57,6 @@
                 }
               </table>
             }
-
-        
     </div>
     </body>
 </html>

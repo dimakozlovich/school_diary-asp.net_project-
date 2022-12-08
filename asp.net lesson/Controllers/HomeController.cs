@@ -7,23 +7,22 @@ namespace asp.net_lesson.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
+        public Timetable timetable;
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
+            var user = new User("kozlovichdima21@gmail.com", "dimaamid");
+            timetable = new Timetable(user.Grade_id);
         }
-
         public IActionResult Index()
         {
-            var user = new User("kozlovichdima21@gmail.com", "dimaamid");
-            var timetable = new Timetable(user.Grade_id);
             return View(timetable);
         }
         [HttpGet]
         public IActionResult Edit(DateTime date,int place_in_day,int place_in_week, int grade_id)
         {
-            var timeTable = new Timetable(grade_id);
-            return View(timeTable.FindSubject(place_in_day,  place_in_week, grade_id));
+           
+            return View(timetable.FindSubject(place_in_day,  place_in_week, grade_id));
         }
         [HttpPost]
         public IActionResult Edit(DateTime date, int place_in_day, int place_in_week, int grade_id, string EditSubject, string EditHomework)
@@ -36,11 +35,15 @@ namespace asp.net_lesson.Controllers
             else
             {
                 timeTable.AddSubject(place_in_day, place_in_week, grade_id, EditSubject, EditHomework);
-            } 
-            var newtimeTable = new Timetable(grade_id);
-            return View("Index",newtimeTable);
+            }
+            timetable.UpdateTimetable();
+            return View("Index",timetable);
         }
-
+        [HttpPost]
+        public IActionResult Week(string week)
+        {   
+            return View();
+        }
         public IActionResult Privacy()
         {
             return View();
@@ -51,5 +54,11 @@ namespace asp.net_lesson.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        public DateTime dateTimeNow()
+        {
+            DateTime dt = DateTime.Now;
+            return dt;
+        }
+
     }
 }
