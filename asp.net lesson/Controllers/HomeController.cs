@@ -12,7 +12,7 @@ namespace asp.net_lesson.Controllers
         {
             _logger = logger;
             var user = new User("kozlovichdima21@gmail.com", "dimaamid");
-            timetable = new Timetable(user.Grade_id);
+            timetable = new Timetable(user.Grade_id,dateTimeNow());
         }
         public IActionResult Index()
         {
@@ -27,14 +27,14 @@ namespace asp.net_lesson.Controllers
         [HttpPost]
         public IActionResult Edit(DateTime date, int place_in_day, int place_in_week, int grade_id, string EditSubject, string EditHomework)
         {
-            var timeTable = new Timetable(grade_id);
-            if (timeTable.BoolExistenceCheck(place_in_week, place_in_day))
+             
+            if (timetable.BoolExistenceCheck(place_in_week, place_in_day))
             {
-                timeTable.EditSubject(date, place_in_day, place_in_week, grade_id, EditSubject, EditHomework);
+                timetable.EditSubject(date, place_in_day, place_in_week, grade_id, EditSubject, EditHomework);
             }
             else
             {
-                timeTable.AddSubject(place_in_day, place_in_week, grade_id, EditSubject, EditHomework);
+                timetable.AddSubject(place_in_day, place_in_week, grade_id, EditSubject, EditHomework);
             }
             timetable.UpdateTimetable();
             return View("Index",timetable);
@@ -54,9 +54,9 @@ namespace asp.net_lesson.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-        public DateTime dateTimeNow()
+        public string dateTimeNow()
         {
-            DateTime dt = DateTime.Now;
+            string dt = DateTime.Now.ToShortDateString();
             return dt;
         }
 

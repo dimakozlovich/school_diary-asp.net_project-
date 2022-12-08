@@ -7,22 +7,31 @@ namespace prototypedb
 {
     public class Timetable
     {
+        
+        private enum Week { past, now, next }
+
         public List<Subject> Subjects { get; set; }
-        public int Grade_id { get; set; }
+        private int Grade_id { get; set; }
+        private Week week;
+
         public Timetable()
         {
             Subjects = new List<Subject>();
+            week = Week.now;
         }
-        public Timetable(int grade_id)
+        public Timetable(int grade_id,string date)
         {
             Subjects = new List<Subject>();
             Grade_id = grade_id;
+            week = Week.now;
             using(var sqlConnection = new SqlConnection(Connection.connection_string))
             {
                 sqlConnection.Open();
                 var sqlCommand = new SqlCommand(@$"SELECT place_in_week,place_in_day,date_first_day_of_week,name_subject_id,homework, grade_id
                                                  FROM Timetable
-                                                 WHERE grade_id = {grade_id}", sqlConnection);
+                                                 WHERE grade_id = {grade_id}
+                                                 AND date_first_day_of_week = {date}"
+                                                 , sqlConnection);
                 using (SqlDataReader reader = sqlCommand.ExecuteReader())
                 {
                     if (reader.HasRows)
