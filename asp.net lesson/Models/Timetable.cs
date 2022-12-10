@@ -72,7 +72,8 @@ namespace prototypedb
                 sqlConnection.Open();
                 var sqlCommand = new SqlCommand(@$"SELECT place_in_week,place_in_day,date_first_day_of_week,name_subject_id,homework, grade_id
                                                  FROM Timetable
-                                                 WHERE grade_id = {Grade_id}", sqlConnection);
+                                                  WHERE grade_id = {Grade_id}
+                                                 AND date_first_day_of_week = '{date}'", sqlConnection);
                 using (SqlDataReader reader = sqlCommand.ExecuteReader())
                 {
                     if (reader.HasRows)
@@ -170,7 +171,21 @@ namespace prototypedb
             }
             return false;
         }
-
+        public void EditWeeek(string week)
+        {
+            if (week == "Past")
+            {
+                date = datepast;
+            }
+            else if(week == "Next")
+            {
+                date = datenext;
+            }
+            else
+            {
+                date = datenow;
+            }
+        }
 
     }
 }

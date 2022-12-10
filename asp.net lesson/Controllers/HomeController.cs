@@ -45,9 +45,11 @@ namespace asp.net_lesson.Controllers
             return View("Index",timetable);
         }
         [HttpPost]
-        public string Week(string week)
+        public IActionResult Week(string week)
         {
-            return week;
+            timetable.EditWeeek(week);
+            timetable.UpdateTimetable();
+            return View("Index", timetable);
         }
         public IActionResult Privacy()
         {
