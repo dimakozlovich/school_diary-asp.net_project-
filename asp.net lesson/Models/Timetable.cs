@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using asp.net_lesson.Controllers;
 using asp.net_lesson.Models;
 using Microsoft.Data.SqlClient;
 namespace prototypedb
@@ -13,16 +14,28 @@ namespace prototypedb
         public List<Subject> Subjects { get; set; }
         private int Grade_id { get; set; }
         private Week week;
+        private DateOnly date { get; set; } // NULL
+        private DateOnly datepast { get; set; } // NULL
+        private DateOnly datenow { get; set; }
+        private DateOnly datenext { get; set; } //NULL
+
+
 
         public Timetable()
         {
             Subjects = new List<Subject>();
             week = Week.now;
+            date = DateOnly.FromDateTime(DateTime.Now);
         }
-        public Timetable(int grade_id,string date)
+        public Timetable(int grade_id,FirstDay delegateFirstDay)
         {
             Subjects = new List<Subject>();
             Grade_id = grade_id;
+            week = Week.now;
+            date = delegateFirstDay(DateOnly.FromDateTime(DateTime.Now));
+            datenow = delegateFirstDay(DateOnly.FromDateTime(DateTime.Now));
+            datepast = datenow.AddDays(-7);
+            datenext = datenow.AddDays(7);
             week = Week.now;
             using(var sqlConnection = new SqlConnection(Connection.connection_string))
             {
@@ -30,7 +43,7 @@ namespace prototypedb
                 var sqlCommand = new SqlCommand(@$"SELECT place_in_week,place_in_day,date_first_day_of_week,name_subject_id,homework, grade_id
                                                  FROM Timetable
                                                  WHERE grade_id = {grade_id}
-                                                 AND date_first_day_of_week = {date}"
+                                                 AND date_first_day_of_week = '{date}'"
                                                  , sqlConnection);
                 using (SqlDataReader reader = sqlCommand.ExecuteReader())
                 {
@@ -130,7 +143,7 @@ namespace prototypedb
             {
                 sqlConnection.Open();
                 var sqlCommand = new SqlCommand($@"INSERT INTO Timetable (place_in_day,place_in_week,grade_id,name_subject_id,homework,date_first_day_of_week)
-                                                                 VALUES({place_in_day},{place_in_week},{grade_id},{EditSubject},'{EditHomework}','2011/02/27')", 
+                                                                 VALUES({place_in_day},{place_in_week},{grade_id},{EditSubject},'{EditHomework}','{date}')", 
                                                                  sqlConnection);
                 sqlCommand.ExecuteNonQuery();
             }

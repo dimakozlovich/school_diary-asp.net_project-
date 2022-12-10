@@ -4,15 +4,20 @@ using System.Diagnostics;
 using prototypedb;
 namespace asp.net_lesson.Controllers
 {
+    public delegate DateOnly FirstDay(DateOnly date);
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
         public Timetable timetable;
+        FirstDay returnFirstday;
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
+            returnFirstday = ReturnFirstDayOfWeek;
             var user = new User("kozlovichdima21@gmail.com", "dimaamid");
-            timetable = new Timetable(user.Grade_id,dateTimeNow());
+            timetable = new Timetable(user.Grade_id,returnFirstday);
+            
+
         }
         public IActionResult Index()
         {
@@ -40,9 +45,9 @@ namespace asp.net_lesson.Controllers
             return View("Index",timetable);
         }
         [HttpPost]
-        public IActionResult Week(string week)
-        {   
-            return View();
+        public string Week(string week)
+        {
+            return week;
         }
         public IActionResult Privacy()
         {
@@ -54,10 +59,12 @@ namespace asp.net_lesson.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-        public string dateTimeNow()
+        public DateOnly ReturnFirstDayOfWeek(DateOnly date)
         {
-            string dt = DateTime.Now.ToShortDateString();
-            return dt;
+            var dayOfWeek = (int)date.DayOfWeek;
+            int difference = 1 - dayOfWeek;
+            DateOnly dateOnly = date.AddDays(difference);
+            return dateOnly;
         }
 
     }
